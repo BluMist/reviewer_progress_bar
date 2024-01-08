@@ -6,7 +6,7 @@ Shows progress in the Reviewer in terms of passed cards per session.
 
 Copyright:  (c) Unknown author (nest0r/Ja-Dark?) 2017
             (c) SebastienGllmt 2017 <https://github.com/SebastienGllmt/>
-            (c) liuzikai 2018-2020 <https://github.com/liuzikai>
+            (c) liuzikai 2018-2024 <https://github.com/liuzikai>
             (c) Glutanimate 2017-2018 <https://glutanimate.com/>
 License: GNU AGPLv3 or later <https://www.gnu.org/licenses/agpl.html>
 """
@@ -23,7 +23,7 @@ from aqt.utils import showInfo
 from aqt.qt import *
 from aqt import mw
 
-__version__ = '2.0.1'
+__version__ = '2.0.2'
 
 ############## USER CONFIGURATION START ##############
 
@@ -91,15 +91,15 @@ maxWidth = getConfig("maxWidth", "5px")  # (e.g. "5px". default: "")
 
 scrollingBarWhenEditing = True  # Make the progress bar 'scrolling' when waiting to resume.
 
-orientationHV = Qt.Horizontal  # Show bar horizontally (side to side). Use with top/bottom dockArea.
-# orientationHV = Qt.Vertical # Show bar vertically (up and down). Use with right/left dockArea.
+orientationHV = Qt.Orientation.Horizontal  # Show bar horizontally (side to side). Use with top/bottom dockArea.
+# orientationHV = Qt.Orientation.Vertical # Show bar vertically (up and down). Use with right/left dockArea.
 
 invertTF = False  # If set to True, inverts and goes from right to left or top to bottom.
 
-dockArea = Qt.TopDockWidgetArea  # Shows bar at the top. Use with horizontal orientation.
-# dockArea = Qt.BottomDockWidgetArea # Shows bar at the bottom. Use with horizontal orientation.
-# dockArea = Qt.RightDockWidgetArea # Shows bar at right. Use with vertical orientation.
-# dockArea = Qt.LeftDockWidgetArea # Shows bar at left. Use with vertical orientation.
+dockArea = Qt.DockWidgetArea.TopDockWidgetArea  # Shows bar at the top. Use with horizontal orientation.
+# dockArea = Qt.DockWidgetArea.BottomDockWidgetArea # Shows bar at the bottom. Use with horizontal orientation.
+# dockArea = Qt.DockWidgetArea.RightDockWidgetArea # Shows bar at right. Use with vertical orientation.
+# dockArea = Qt.DockWidgetArea.LeftDockWidgetArea # Shows bar at left. Use with vertical orientation.
 
 pbStyle = ""  # Stylesheet used only if blank. Else uses QPalette + theme style.
 '''pbStyle options (insert a quoted word above):
@@ -195,14 +195,14 @@ pbdStyle = QStyleFactory.create("%s" % pbStyle)  # Don't touch.
 
 # Defining palette in case needed for custom colors with themes.
 palette = QPalette()
-palette.setColor(QPalette.Base, QColor(qbg))
-palette.setColor(QPalette.Highlight, QColor(qfg))
-palette.setColor(QPalette.Button, QColor(qbg))
-palette.setColor(QPalette.WindowText, QColor(qtxt))
-palette.setColor(QPalette.Window, QColor(qbg))
+palette.setColor(QPalette.ColorRole.Base, QColor(qbg))
+palette.setColor(QPalette.ColorRole.Highlight, QColor(qfg))
+palette.setColor(QPalette.ColorRole.Button, QColor(qbg))
+palette.setColor(QPalette.ColorRole.WindowText, QColor(qtxt))
+palette.setColor(QPalette.ColorRole.Window, QColor(qbg))
 
 if maxWidth:
-    if orientationHV == Qt.Horizontal:
+    if orientationHV == Qt.Orientation.Horizontal:
         restrictSize = "max-height: %s;" % maxWidth
     else:
         restrictSize = "max-width: %s;" % maxWidth
@@ -282,10 +282,10 @@ def _dock(pb: QProgressBar) -> QDockWidget:
     if len(existing_widgets) > 0:
         mw.setDockNestingEnabled(True)
 
-        if dockArea == Qt.TopDockWidgetArea or dockArea == Qt.BottomDockWidgetArea:
-            stack_method = Qt.Vertical
-        if dockArea == Qt.LeftDockWidgetArea or dockArea == Qt.RightDockWidgetArea:
-            stack_method = Qt.Horizontal
+        if dockArea == Qt.DockWidgetArea.TopDockWidgetArea or dockArea == Qt.DockWidgetArea.BottomDockWidgetArea:
+            stack_method = Qt.Orientation.Vertical
+        if dockArea == Qt.DockWidgetArea.LeftDockWidgetArea or dockArea == Qt.DockWidgetArea.RightDockWidgetArea:
+            stack_method = Qt.Orientation.Horizontal
         mw.splitDockWidget(existing_widgets[0], dock, stack_method)
 
     if qbr > 0 or pbdStyle is not None:
